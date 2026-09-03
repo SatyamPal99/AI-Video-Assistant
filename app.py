@@ -161,5 +161,21 @@ def upload_file():
     return jsonify({"path": path})
 
 
+# ── Serve the built React app ───────────────────────────────────────────
+# Lets one process (and, for self-hosting, one Cloudflare Tunnel) cover
+# both the site and the API — no separate frontend host, no CORS to worry
+# about. Run `npm run build` in frontend/ first; this serves frontend/dist.
+FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path):
+    full_path = os.path.join(FRONTEND_DIST, path)
+    if path and os.path.isfile(full_path):
+        return send_from_directory(FRONTEND_DIST, path)
+    return send_from_directory(FRONTEND_DIST, "index.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False, port=5000)
