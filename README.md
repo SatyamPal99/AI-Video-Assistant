@@ -137,6 +137,7 @@ python main.py
 **Streamlit UI**
 ```bash
 streamlit run app_streamlit.py
+pip install -U yt-dlp (if error unable to download video HTTP 403)
 ```
 
 **Flask API + React frontend**
